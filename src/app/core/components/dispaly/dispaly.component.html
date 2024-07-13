@@ -1,5 +1,5 @@
 <section>
-    <div class="container mx-auto mt-10" *ngIf="transactions.length <0 else noData" >
+    <div class="container mx-auto mt-10" *ngIf="transactions.length >0; else noData" >
         <div class="container me-auto my-6 ">
             <div class="flex">
                 <input type="search" [(ngModel)]="searchTerm" placeholder="Search by Name ..."
