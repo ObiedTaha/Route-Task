@@ -1,53 +1,64 @@
-<div class="container mx-auto mt-10">
-    <div class="container me-auto my-6 ">
-        <div class="flex">
-            <input type="search" [(ngModel)]="searchTerm" placeholder="Search by Name ..." class="min-w-40 max-w-md px-4 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:border-transparent">
+<section>
+    <div class="container mx-auto mt-10" *ngIf="transactions.length <0 else noData" >
+        <div class="container me-auto my-6 ">
+            <div class="flex">
+                <input type="search" [(ngModel)]="searchTerm" placeholder="Search by Name ..."
+                    class="min-w-40 max-w-md px-4 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-inset focus:border-transparent">
+            </div>
+        </div>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        ID
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Name
+                    </th>
+    
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Total Amount
+                    </th>
+    
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Transation Per Day
+                    </th>
+                </tr>
+            </thead>
+    
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of data.customers | search : searchTerm ">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{item.id}}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-left text-gray-500">
+                        {{item.name }}
+                    </td>
+                    <td>
+                        {{ customerTransactionAmounts[item.id] || 0 }}
+                    </td>
+                    <td class=" whitespace-nowrap text-sm text-gray-500">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
+                            (click)="selectCustomer(item.id)">View Graph</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class=" my-4 ">
+            <app-graph *ngIf="selectedCustomerTransactions.length!=0 else viewCustomerGraph"
+                [transactions]="selectedCustomerTransactions"></app-graph>
+        
+            <ng-template #viewCustomerGraph>
+                <h3 class="text-center mt-3 text-blue-400">Please click on View to show transactions graph.</h3>
+        
+            </ng-template>
+        
         </div>
     </div>
-    <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-            <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ID
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    
-                </th>
-            </tr>
-        </thead>
-        
-        <tbody class="bg-white divide-y divide-gray-200">
-            <tr *ngFor="let item of data.customers | search : searchTerm ">
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{item.id}}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" >
-                    {{item.name }}
-                </td>
-                <ng-container  *ngFor="let transaction of data.transactions" >
-                    <td *ngIf="transaction.customer_id === item.id" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <span class="font-bold">Date: </span> {{transaction.date | date}}, <span class="font-bold">Amount: </span> {{transaction.amount | currency}}
-                    </td>
-                    
-                </ng-container>
-                
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- <div *ngFor="let customer of data.">
-    <h3>{{ customer.name }}</h3>
-    <ul>
-      <li *ngFor="let transaction of data.transactions" 
-          *ngIf="transaction.customer_id === customer.id">
-        Date: {{ transaction.date }}, Amount: {{ transaction.amount }}
-      </li>
-    </ul>
-  </div> -->
+    
+    
+    
+    <ng-template #noData>
+        <app-no-data></app-no-data>
+    </ng-template>
+</section>
